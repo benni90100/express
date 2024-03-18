@@ -9,7 +9,8 @@ DROP TABLE IF EXISTS planets;
 
   CREATE TABLE planets (
     id SERIAL NOT NULL PRIMARY KEY,
-    name TEXT  NOT NULL 
+    name TEXT  NOT NULL,
+    image TEXT
   )`);
   await db.none(`INSERT INTO planets (NAME) VALUES  ('Earth')`)
   await db.none(`INSERT INTO planets (NAME) VALUES  ('Mars')`)
@@ -37,12 +38,24 @@ const create = async (req: Request, res: Response) => {
 
   res.status(201).json(planets);
 };
+const createImage = async (req: Request, res: Response) => {
+  
+  const {id} = req.params
+  const filename = req.file?.path
 
+  if (filename) {
+    db.none('UPDATE planets SET image=$2 WHERE  id=$1', [Number(id), filename])
+    res.status(200).json({msg: "image created"});
+  }
+else{
+  res.status(404).json({msg:"richiesta non soddisfatta"})
+}
+};
 const updateById = async (req: Request, res: Response) => {
   const { id } = req.params;
   const { name } = req.body;
   const updatedPlanet = await db.one(
-    `UPDATE planets SET name = $1 WHERE id = $2 RETURNING *`,
+    `UPDATE planets SET name = $1 WHERE id = $2`,
     [name, Number(id)])
 
   //console.log(planets);
@@ -55,4 +68,4 @@ const deleteById = async (req: Request, res: Response) => {
   res.status(200).json(planets);
 };
 
-export { getAll, getOneById, updateById, create, deleteById };
+export { getAll, getOneById, updateById, create, deleteById, createImage };

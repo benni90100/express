@@ -1,10 +1,18 @@
-
+import multer from "multer"
 import express from "express";
 import "express-async-errors";
 import morgan from "morgan";
-import { getAll, getOneById, updateById, create, deleteById } from "./controllers/planets.js"
+import { getAll, getOneById, updateById, create, deleteById, createImage} from "./controllers/planets.js"
 const TODO: string = "start writing your Express API server here :)";
-
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./upload");
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+const upload = multer({ storage });
 const app = express();
 const port = 3000;
 
@@ -20,7 +28,7 @@ app.get("/api/planets", getAll);
 app.get("/api/planets/:id", getOneById);
 //route post
 app.post("/api/planets", create);
-
+app.post("/api/planets/:id/image",upload.single("image"), createImage);
 //put
 app.put("/api/planets/:id", updateById);
 
