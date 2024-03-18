@@ -42,6 +42,18 @@ const updateById = (req: Request, res: Response) => {
   console.log(planets);
   res.status(200).json(planets);
 };
+const createImage = async (req: Request, res: Response) => {
+  console.log(req.file)
+  const {id} = req.params
+  const filename = req.file?.path
+
+  if (filename) {
+    res.status(200).json({msg: "image created"});
+  }
+else{
+  res.status(404).json({msg:"richiesta non soddisfatta"})
+}
+};
 
 const deleteById = (req: Request, res: Response) => {
   const { id } = req.params;
@@ -50,4 +62,4 @@ const deleteById = (req: Request, res: Response) => {
   res.status(200).json(planets);
 };
 
-export { getAll, getOneById, updateById, create, deleteById };
+export { getAll, getOneById, updateById, create, deleteById,createImage };
