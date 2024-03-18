@@ -32,39 +32,59 @@ let planets: Planets = [
 
 //routes get
 app.get("/api/planets", (req, res) => {
-  res.status(200).json(planets);
+  try {
+    res.status(200).json(planets);
+  } catch (error:any) {
+    console.log(error.message)
+  }
 });
 
 app.get("/api/planets/:id", (req, res) => {
+ try {
   const { id } = req.params;
   res.json(planets.find((p) => p.id === Number(id)));
+ } catch (error:any) {
+  console.log(error.message)
+ }
 });
 //route post
 app.post("/api/planets", (req, res) => {
-  const { id, name } = req.body;
+  try {
+    const { id, name } = req.body;
   const newPlanet = { id, name };
   planets = [...planets, newPlanet];
 
   res.status(201).json(planets);
+  } catch (error:any) {
+    console.log(error.message)
+  }
 });
 
 //put
 app.put("/api/planets/:id", (req, res) => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
   const { name } = req.body;
   planets = planets.map((p) => (p.id === Number(id) ? { ...p, name } : p));
 
   console.log(planets)
   res.status(200).json(planets)
+  } catch (error:any) {
+   console.log(error.message) 
+  }
 });
 
 //delete
 
 app.delete("/api/planets/:id", (req, res) => {
-  const {id} = req.params
+  try {
+    const {id} = req.params
   planets = planets.filter((p)=>p.id !== Number(id))
   console.log("deleted")
   res.status(200).json(planets)
+  } catch (error:any) {
+    console.log(error.message)
+  }
 })
 //start server
 app.listen(port, () => {
